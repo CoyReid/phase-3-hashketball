@@ -127,3 +127,105 @@ def game_hash
 end
 
 # Write code here
+
+def all_players
+  game_hash[:home][:players] + game_hash[:away][:players]
+end
+
+def player_stats(player_name)
+  all_players.find do |player|
+    player[:player_name] == player_name
+  end
+end
+
+def team_finder(team_name)
+  team_info = game_hash.find do |location, value|
+    value[:team_name] == team_name
+  end
+  team_info[1]
+end
+
+
+
+def num_points_scored(player_name)
+  player = player_stats(player_name)
+  player[:points]
+end
+
+def shoe_size(player_name)
+  player = player_stats(player_name)
+  player[:shoe]
+end
+
+def team_colors(team_name)
+  team = team_finder(team_name)
+  team[:colors]
+end
+
+def team_names
+  game_hash.map do |location, value|
+    value[:team_name]
+  end
+end
+
+def player_numbers(team_name)
+  team = team_finder(team_name)
+  team[:players].map do |player|
+    player[:number]
+  end
+end
+
+def big_shoe_player
+  all_players.max_by do |player|
+    player[:shoe]
+  end
+end
+
+def big_shoe_rebounds
+  big_shoe_player[:rebounds]
+end
+
+
+
+def most_points_scored
+  all_players.max_by do |player|
+    player[:points]
+  end
+end
+
+def winning_team
+  home_team = game_hash[:home]
+  away_team = game_hash[:away]
+  home_points = []
+  away_points = []
+  i = 0
+  home_team[:players].map do |player|
+    home_points << player[:points]
+  end
+  away_team[:players].map do |player|
+    away_points << player[:points]
+  end
+  home_points.inject(0){|sum, x| sum + x} > away_points.inject(0){|sum, x| sum + x} ? puts(home_team[:team_name]) : puts(away_team[:team_name])
+end
+
+def player_with_longest_name
+  all_players.max_by do |player|
+    player[:player_name].length
+  end
+end
+
+def most_steals
+  all_players.max_by do |player|
+    player[:steals]
+  end
+end
+
+def long_name_steals_a_ton?
+  answer_one = player_with_longest_name
+  answer_two = most_steals
+  result = answer_one == answer_two ? true : false
+
+  puts result
+end
+
+winning_team
